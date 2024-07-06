@@ -2,7 +2,7 @@ package com.example.swimmers.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.swimmers.Constants.DATABASE_MEMBERS_TABLE
+import com.example.swimtrip.Constants.DATABASE_MEMBERS_TABLE
 
 @Entity(tableName = DATABASE_MEMBERS_TABLE)
 data class Members(
