@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="App.Starting.Theme" parent="Theme.SplashScreen" >
+        <item name="windowSplashScreenBackground">#efefef</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/l</item>
+        <item name="postSplashScreenTheme">@style/Theme.SwimTrip</item>
+    </style>
+
+</resources>
