@@ -13,8 +13,8 @@ interface SwimmersDao {
     fun getAllMembers(): Flow<List<Members>>
 
 
-    @Query("SELECT * FROM members_table WHERE isPay = 1 ORDER BY id ASC")
-    fun getPayMembers(): Flow<List<Members>>
+    @Query("SELECT * FROM members_table WHERE isChosen = 1 ORDER BY id ASC")
+    fun getChosenMembers(): Flow<List<Members>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addNewMember(members: Members)
