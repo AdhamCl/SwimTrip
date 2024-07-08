@@ -18,8 +18,8 @@ class SwimmersRepository @Inject constructor(
     }
 
 
-    fun getPayMembers(): Flow<List<Members>>{
-        return swimmersDao.getPayMembers()
+    fun getChosenMembers(): Flow<List<Members>>{
+        return swimmersDao.getChosenMembers()
     }
 
 
