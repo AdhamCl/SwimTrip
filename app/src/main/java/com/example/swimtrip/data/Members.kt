@@ -6,11 +6,12 @@ import com.example.swimtrip.Constants.DATABASE_MEMBERS_TABLE
 
 @Entity(tableName = DATABASE_MEMBERS_TABLE)
 data class Members(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int =0,
     val number: Int,
     val firstName: String,
     val lastName: String,
     val warning: Int,
+    val isChosen: Boolean,
     val isPay: Boolean
 )
