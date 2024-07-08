@@ -80,7 +80,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
             AddNewMember(
                 onDismissRequest = { editNameDialog.value = false },
                 onConfirmation = {
-                    editNameDialog.value = false
+                    swimViewModel.addDate()
                 },
                 firstName = swimViewModel.firstName.value,
                 firstNameChange = { swimViewModel.firstName.value = it },
@@ -139,20 +139,15 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
             }
 
-            HorizontalPager(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentHeight() //and this
-                    .weight(1f) ,
-                state = pagerState
-            ) { index ->
+
 
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f) ,
                 ) {
-                    when (index) {
+                    when (                selectedTabIndex
+                    ) {
                         0 -> MembersScreen(swimViewModel)
                         1 -> ChosenScreen()
                         2 -> ArchivesScreen()
@@ -160,8 +155,6 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
 
                 }
-            }
         }
-    }
 
-}
+}}
