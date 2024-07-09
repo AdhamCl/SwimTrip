@@ -119,6 +119,7 @@ fun AddNewMember(
                 TextButton(
                     onClick = {
                         onConfirmation()
+                        onDismissRequest()
                     }
                 ) {
                     Text("تأكيد")
