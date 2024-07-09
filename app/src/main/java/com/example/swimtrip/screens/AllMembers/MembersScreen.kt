@@ -109,7 +109,7 @@ fun MemberItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(10.dp),
             Arrangement.Center,
             Alignment.CenterVertically
         ) {
@@ -125,7 +125,7 @@ fun MemberItem(
                 Text(
                     text = member.firstName
                 )
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = member.lastName
                 )
@@ -143,7 +143,7 @@ fun MemberItem(
                     Icons.Default.Add,
                     contentDescription = "Add to Other",
                     tint = Color.Blue,
-                    modifier = Modifier.size(42.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
