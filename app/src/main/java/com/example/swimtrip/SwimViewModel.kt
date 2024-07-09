@@ -25,6 +25,9 @@ class SwimViewModel @Inject constructor(
     val firstName: MutableState<String> = mutableStateOf("")
     val lastName: MutableState<String> = mutableStateOf("")
     val number: MutableState<Int> = mutableStateOf(0)
+    val warning: MutableState<Int> = mutableStateOf(0)
+    val isPay: MutableState<Boolean> = mutableStateOf(false)
+    val isChosen: MutableState<Boolean> = mutableStateOf(false)
 
 
     private val _allMembers = MutableStateFlow<List<Members>>(emptyList())
@@ -75,6 +78,22 @@ class SwimViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             swimmersRepository.deleteMemberById(id)
         }
+    }
+
+
+    fun updateMember() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val member = Members(
+                number = number.value,
+                firstName = firstName.value,
+                lastName = lastName.value,
+                warning = warning.value,
+                isChosen = isChosen.value,
+                isPay = isPay.value
+            )
+            swimmersRepository.updateMember(member)
+        }
+
     }
 
 
