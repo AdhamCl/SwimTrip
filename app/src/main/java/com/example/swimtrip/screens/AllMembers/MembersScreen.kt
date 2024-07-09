@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -85,7 +86,10 @@ fun MembersScreen(
                 background = { DeleteBackground(degrees) },
                 directions = setOf(DismissDirection.EndToStart),
                 dismissContent = {
-                    MemberItem(it)
+                    MemberItem(it){
+                        swimViewModel.isChosen.value = true
+                        swimViewModel.updateMember()
+                    }
 
                 }
             )
@@ -98,7 +102,7 @@ fun MembersScreen(
 @Composable
 fun MemberItem(
     member: Members,
-
+    onAddClicked:()->Unit
     ) {
     Card(
         modifier = Modifier
@@ -113,6 +117,7 @@ fun MemberItem(
             Arrangement.Center,
             Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.width(10.dp))
             Text(
                 modifier = Modifier.weight(1f),
                 text = member.number.toString()
