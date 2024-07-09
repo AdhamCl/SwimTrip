@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,7 @@ fun MembersScreen(
     swimViewModel: SwimViewModel
 ) {
 
-    val allMembers by  swimViewModel.allMembers.collectAsState()
+    val allMembers by swimViewModel.allMembers.collectAsState()
 
 
 
@@ -68,23 +69,20 @@ fun MembersScreen(
 
             val dismissState = rememberDismissState()
             val dismissDirection = dismissState.dismissDirection
-
-            val isDismissed = dismissState.isDismissed(DismissDirection.StartToEnd)
-
+            val isDismiss = dismissState.isDismissed(DismissDirection.EndToStart)
+            if (isDismiss && dismissDirection == DismissDirection.EndToStart) {
+                swimViewModel.deleteMember(it.id)
+            }
             val degrees: Float by animateFloatAsState(
                 if (dismissState.targetValue == DismissValue.Default) 0f else -45f,
                 label = ""
             )
 
 
-            if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
-                swimViewModel.deleteMember(it.id)
-            }
-
 
             SwipeToDismiss(
                 state = dismissState,
-                background = {  DeleteBackground(degrees)    },
+                background = { DeleteBackground(degrees) },
                 directions = setOf(DismissDirection.EndToStart),
                 dismissContent = {
                     MemberItem(it)
@@ -101,7 +99,7 @@ fun MembersScreen(
 fun MemberItem(
     member: Members,
 
-) {
+    ) {
     Card(
         modifier = Modifier
             .padding(top = 5.dp, end = 5.dp, start = 5.dp)
@@ -138,10 +136,15 @@ fun MemberItem(
                 text = member.warning.toString()
             )
             IconButton(
-                onClick = {  },
+                onClick = { },
                 modifier = Modifier.weight(.5f)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add to Other", tint = Color.Green)
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "Add to Other",
+                    tint = Color.Blue,
+                    modifier = Modifier.size(42.dp)
+                )
             }
         }
     }
