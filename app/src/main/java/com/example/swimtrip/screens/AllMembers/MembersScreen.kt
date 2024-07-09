@@ -134,12 +134,12 @@ fun MemberItem(
             }
 
             Text(
-                modifier = Modifier.weight(0.5f),
+                modifier = Modifier.weight(.5f),
                 text = member.warning.toString()
             )
             IconButton(
                 onClick = {  },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(.5f)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add to Other", tint = Color.Green)
             }
