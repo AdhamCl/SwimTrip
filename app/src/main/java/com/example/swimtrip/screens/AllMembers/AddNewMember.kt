@@ -1,23 +1,23 @@
 package com.example.swimtrip.screens.AllMembers
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.swimmers.data.Members
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 @Composable
 fun AddNewMember(
     onDismissRequest: () -> Unit,
@@ -28,6 +28,7 @@ fun AddNewMember(
     lastNameChange: (String) -> Unit,
     number: Int,
     numberChange: (Int) -> Unit,
+    checkMemberExists: suspend  (Int) -> Boolean,
 ) {
 
     var startAnimation by remember { mutableStateOf(false) }
@@ -37,7 +38,8 @@ fun AddNewMember(
         animationSpec = tween(100), label = ""
     )
 
-
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Box(
 
@@ -93,9 +95,17 @@ fun AddNewMember(
 
                         )
                     OutlinedTextField(
-                        value = number.toString(),
+                        value = if (number == 0) "" else number.toString(),
 
-                        onValueChange = { numberChange(it.toInt()) },
+                        onValueChange = {
+                            val newNumber = it.toIntOrNull()
+
+                            if (newNumber != null) {
+                                numberChange(newNumber)
+                            } else {
+                                numberChange(0)
+                            }
+                                        },
                         label = {
                             Text(
                                 text = "الرقم",
@@ -118,8 +128,15 @@ fun AddNewMember(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onConfirmation()
-                        onDismissRequest()
+                        scope.launch {
+                            if (checkMemberExists(number)) {
+                                Toast.makeText(context, "هاذا الرقم موجود ب الفعل.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                onConfirmation()
+                                onDismissRequest()
+
+                            }
+                        }
                     }
                 ) {
                     Text("تأكيد")
