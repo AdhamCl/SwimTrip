@@ -13,21 +13,25 @@ import javax.inject.Inject
 class SwimmersRepository @Inject constructor(
     private val swimmersDao: SwimmersDao
 ) {
-    fun getAllMembers(): Flow<List<Members>>{
+    fun getAllMembers(): Flow<List<Member>>{
         return  swimmersDao.getAllMembers()
     }
 
 
-    fun getChosenMembers(): Flow<List<Members>>{
+    fun getChosenMembers(): Flow<List<Member>>{
         return swimmersDao.getChosenMembers()
     }
 
 
-    suspend fun addNewMember(member: Members){
+    suspend fun addNewMember(member: Member){
         swimmersDao.addNewMember(member)
     }
 
-    suspend fun updateMember(member: Members){
+    suspend fun isMemberExists(number: Int): Boolean {
+        return swimmersDao.isMemberExists(number)
+    }
+
+    suspend fun updateMember(member: Member){
         swimmersDao.updateMember(member)
     }
 
