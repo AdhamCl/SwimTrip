@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.swimmers.data.Members
+import com.example.swimmers.data.Member
 import com.example.swimmers.data.SwimmersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +20,6 @@ class SwimViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-
-
     val firstName: MutableState<String> = mutableStateOf("")
     val lastName: MutableState<String> = mutableStateOf("")
     val number: MutableState<Int> = mutableStateOf(0)
@@ -30,8 +28,9 @@ class SwimViewModel @Inject constructor(
     val isChosen: MutableState<Boolean> = mutableStateOf(false)
 
 
-    private val _allMembers = MutableStateFlow<List<Members>>(emptyList())
-    var allMembers: StateFlow<List<Members>> = _allMembers
+
+    private val _allMembers = MutableStateFlow<List<Member>>(emptyList())
+    var allMembers: StateFlow<List<Member>> = _allMembers
 
     fun getAllMembers() {
         viewModelScope.launch {
@@ -42,8 +41,8 @@ class SwimViewModel @Inject constructor(
         }
     }
 
-    private val _allChosenMembers = MutableStateFlow<List<Members>>(emptyList())
-    var allChosenMembers: StateFlow<List<Members>> = _allChosenMembers
+    private val _allChosenMembers = MutableStateFlow<List<Member>>(emptyList())
+    var allChosenMembers: StateFlow<List<Member>> = _allChosenMembers
 
     fun getChosenMembers() {
         viewModelScope.launch {
@@ -57,7 +56,7 @@ class SwimViewModel @Inject constructor(
     fun addDate() {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val member = Members(
+            val member = Member(
                 number = number.value,
                 firstName = firstName.value,
                 lastName = lastName.value,
@@ -74,6 +73,11 @@ class SwimViewModel @Inject constructor(
     }
 
 
+    suspend fun checkMemberExists(number: Int): Boolean {
+        return swimmersRepository.isMemberExists(number)
+    }
+
+
     fun deleteMember(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             swimmersRepository.deleteMemberById(id)
@@ -83,7 +87,7 @@ class SwimViewModel @Inject constructor(
 
     fun updateMember() {
         viewModelScope.launch(Dispatchers.IO) {
-            val member = Members(
+            val member = Member(
                 number = number.value,
                 firstName = firstName.value,
                 lastName = lastName.value,
@@ -96,5 +100,12 @@ class SwimViewModel @Inject constructor(
 
     }
 
-
+    fun restFiled(){
+        firstName.value = ""
+        lastName.value = ""
+        number.value = 0
+        warning.value = 0
+        isChosen.value = false
+        isPay.value = false
+    }
 }
