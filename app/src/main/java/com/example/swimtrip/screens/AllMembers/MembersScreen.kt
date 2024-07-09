@@ -5,8 +5,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -118,10 +121,13 @@ fun MemberItem(
             )
             Column(
                 modifier = Modifier.weight(3f),
+                verticalArrangement = Arrangement.SpaceAround,
+
                 ) {
                 Text(
                     text = member.firstName
                 )
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = member.lastName
                 )
@@ -133,7 +139,7 @@ fun MemberItem(
             )
             IconButton(
                 onClick = {  },
-                modifier = Modifier.weight(0.5f)
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add to Other", tint = Color.Green)
             }
