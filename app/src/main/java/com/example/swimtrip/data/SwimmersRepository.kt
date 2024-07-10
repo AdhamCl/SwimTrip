@@ -18,8 +18,8 @@ class SwimmersRepository @Inject constructor(
     }
 
 
-    fun getChosenMembers(): Flow<List<Member>>{
-        return swimmersDao.getChosenMembers()
+    fun getAllChosenMembers(): Flow<List<Member>>{
+        return swimmersDao.getAllChosenMembers()
     }
 
 
@@ -27,8 +27,12 @@ class SwimmersRepository @Inject constructor(
         swimmersDao.addNewMember(member)
     }
 
-    suspend fun isMemberExists(number: Int): Boolean {
-        return swimmersDao.isMemberExists(number)
+    suspend fun isMemberExists(id: Int): Boolean {
+        return swimmersDao.isMemberExists(id)
+    }
+
+    suspend fun isMemberChosen(id: Int): Boolean {
+        return swimmersDao.isChosen(id)
     }
 
     suspend fun updateMember(member: Member){
@@ -37,5 +41,13 @@ class SwimmersRepository @Inject constructor(
 
     suspend fun deleteMemberById(memberId: Int){
         swimmersDao.deleteMemberById(memberId)
+    }
+
+    suspend fun getChosenMembersCount(): Int {
+        return swimmersDao.getChosenMembersCount()
+    }
+
+    suspend fun getChosenAndPaidMembersCount(): Int {
+        return swimmersDao.getChosenAndPaidMembersCount()
     }
 }
