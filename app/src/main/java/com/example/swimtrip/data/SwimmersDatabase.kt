@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        Members::class,
+        Member::class,
 
     ], version = 1, exportSchema = false
 )
