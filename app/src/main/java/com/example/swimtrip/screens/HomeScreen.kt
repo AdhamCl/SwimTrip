@@ -1,17 +1,10 @@
 package com.example.swimtrip.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -22,21 +15,22 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.swimtrip.SwimViewModel
 import com.example.swimtrip.screens.AllMembers.AddNewMember
+import com.example.swimtrip.screens.AllMembers.AllMembersTopBar
 import com.example.swimtrip.screens.AllMembers.MembersScreen
 import com.example.swimtrip.screens.archives.ArchivesScreen
+import com.example.swimtrip.screens.archives.ArchivesTopBar
 import com.example.swimtrip.screens.chosen.ChosenScreen
+import com.example.swimtrip.screens.chosen.ChosenTopBar
+import com.example.swimtrip.ui.theme.MayaBlue
 
 
 @ExperimentalMaterial3Api
@@ -46,16 +40,16 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
     val tabItem = listOf(
         TabItem(
-            title = "الأعضاء" ,
-            index = 0 ,
-        ) ,
+            title = "الأعضاء",
+            index = 0,
+        ),
         TabItem(
-            title = "المعنيون" ,
-            index = 1 ,
-        ) ,
+            title = "المعنيون",
+            index = 1,
+        ),
         TabItem(
-            title = "الارشيف" ,
-            index = 2 ,
+            title = "الارشيف",
+            index = 2,
         )
     )
 
@@ -65,8 +59,8 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
         pagerState.animateScrollToPage(selectedTabIndex)
     }
 
-    LaunchedEffect(key1 = pagerState.currentPage , pagerState.isScrollInProgress) {
-        if (! pagerState.isScrollInProgress)
+    LaunchedEffect(key1 = pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress)
             selectedTabIndex = pagerState.currentPage
     }
     LaunchedEffect(key1 = selectedTabIndex) {
@@ -78,7 +72,9 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
     when {
         editNameDialog.value -> {
             AddNewMember(
-                onDismissRequest = { editNameDialog.value = false },
+                onDismissRequest = {
+                    editNameDialog.value = false
+                },
                 onConfirmation = {
                     swimViewModel.addDate()
                 },
@@ -87,33 +83,54 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                 lastName = swimViewModel.lastName.value,
                 lastNameChange = { swimViewModel.lastName.value = it },
                 number = swimViewModel.number.value,
-                numberChange = { swimViewModel.number.value = it }
-                )
+                numberChange = { swimViewModel.number.value = it },
+                checkMemberExists = { swimViewModel.checkMemberExists(it) },
+            )
 
         }
     }
+
+
+    val allChosenMembers by swimViewModel.allChosenMembers.collectAsState()
+
+
+    var chosenAndPaidMembersCount by remember { mutableIntStateOf(0) }
+    var chosenMembersCount by remember { mutableIntStateOf(0) }
+
+
+    LaunchedEffect(key1 = true) {
+        swimViewModel.getAllChosenMembers()
+    }
+
+    chosenMembersCount = allChosenMembers.size
+    chosenAndPaidMembersCount = allChosenMembers.count { it.isPay }
     Scaffold(
-        floatingActionButton = {
-
-            SessionsFAB({ editNameDialog.value = true })
-
-
-        } ,
         topBar = {
             TopAppBar(
 
                 title = {
-                    Row(Modifier.fillMaxWidth(),Arrangement.Center) {
-                        Text("السباحين", fontSize = 22.sp,color = Color.White, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.width(20.dp))
+                    when (selectedTabIndex) {
+                        0 -> AllMembersTopBar {
+                            editNameDialog.value = true
+                            swimViewModel.restFiled()
+                        }
+
+                        1 -> ChosenTopBar(
+                            chosenAndPaidMembersCount,
+                            chosenMembersCount,
+
+                        )
+
+                        2 -> ArchivesTopBar()
                     }
+
                 },
-                colors = TopAppBarDefaults.topAppBarColors(Color.Blue),
+                colors = TopAppBarDefaults.topAppBarColors(MayaBlue),
 
 
-            )
-        } ,
-        modifier = Modifier.fillMaxSize() ,
+                )
+        },
+        modifier = Modifier.fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
@@ -125,15 +142,18 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
             TabRow(
                 selectedTabIndex = selectedTabIndex
             ) {
-                tabItem.forEachIndexed { index , item ->
+                tabItem.forEachIndexed { index, item ->
                     Tab(
-                        selected = index == selectedTabIndex ,
+                        selected = index == selectedTabIndex,
                         onClick = {
                             selectedTabIndex = index
-                        } ,
+                        },
                         text = {
-                            Text(item.title)
-                        } ,
+                            Text(
+                                text = item.title,
+                                color = MayaBlue
+                            )
+                        },
                     )
                 }
 
@@ -141,20 +161,25 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
 
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f) ,
-                ) {
-                    when (                selectedTabIndex
-                    ) {
-                        0 -> MembersScreen(swimViewModel)
-                        1 -> ChosenScreen()
-                        2 -> ArchivesScreen()
-                    }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+            ) {
+                when (selectedTabIndex) {
+                    0 -> MembersScreen(swimViewModel)
+                    1 -> ChosenScreen(
+                        allChosenMembers,
+                        {swimViewModel.updateMember(it)},
+                        {   }
+                     ) {  }
 
-
+                    2 -> ArchivesScreen(swimViewModel)
                 }
+
+
+            }
         }
 
-}}
+    }
+}
