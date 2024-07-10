@@ -129,14 +129,10 @@ fun AddNewMember(
                 TextButton(
                     onClick = {
                         scope.launch {
-                            if (checkMemberExists(number)) {
-                                Toast.makeText(context, "هاذا الرقم موجود ب الفعل.", Toast.LENGTH_SHORT).show()
-                            } else {
-                                onConfirmation()
-                                onDismissRequest()
-
-                            }
+                            if(checkMemberExists(number)) Toast.makeText(context,"هاذا الرقم موجود بالفعل",Toast.LENGTH_SHORT).show()
+                            else  {onConfirmation(); onDismissRequest()}
                         }
+
                     }
                 ) {
                     Text("تأكيد")
