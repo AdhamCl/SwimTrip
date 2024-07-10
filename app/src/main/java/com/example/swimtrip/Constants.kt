@@ -4,6 +4,6 @@ object Constants {
 
     const val DATABASE_MEMBERS_TABLE = "members_table"
 
-    const val SWIM_TRIP_DAtABASE = "members_databaseee"
+    const val SWIM_TRIP_DAtABASE = "members_databaseeeee"
 
 }
