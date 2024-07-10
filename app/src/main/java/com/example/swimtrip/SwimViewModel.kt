@@ -25,7 +25,9 @@ class SwimViewModel @Inject constructor(
     val number: MutableState<Int> = mutableStateOf(0)
     val warning: MutableState<Int> = mutableStateOf(0)
     val isPay: MutableState<Boolean> = mutableStateOf(false)
-    val isChosen: MutableState<Boolean> = mutableStateOf(false)
+    val isChosen: MutableState<Boolean> = mutableStateOf(true)
+    val chosenAndPaidMembersCount: MutableState<Int> = mutableStateOf(0)
+    val chosenMembersCount: MutableState<Int> = mutableStateOf(0)
 
 
 
@@ -44,9 +46,9 @@ class SwimViewModel @Inject constructor(
     private val _allChosenMembers = MutableStateFlow<List<Member>>(emptyList())
     var allChosenMembers: StateFlow<List<Member>> = _allChosenMembers
 
-    fun getChosenMembers() {
+    fun getAllChosenMembers() {
         viewModelScope.launch {
-            swimmersRepository.getChosenMembers().collect {
+            swimmersRepository.getAllChosenMembers().collect {
                 _allChosenMembers.value = it
             }
 
@@ -77,6 +79,10 @@ class SwimViewModel @Inject constructor(
         return swimmersRepository.isMemberExists(number)
     }
 
+    suspend fun checkMemberIsChosen(id: Int): Boolean {
+        return swimmersRepository.isMemberChosen(id)
+    }
+
 
     fun deleteMember(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -85,20 +91,17 @@ class SwimViewModel @Inject constructor(
     }
 
 
-    fun updateMember() {
+    fun updateMember(member: Member) {
         viewModelScope.launch(Dispatchers.IO) {
-            val member = Member(
-                number = number.value,
-                firstName = firstName.value,
-                lastName = lastName.value,
-                warning = warning.value,
-                isChosen = isChosen.value,
-                isPay = isPay.value
-            )
+
             swimmersRepository.updateMember(member)
         }
 
     }
+
+
+
+
 
     fun restFiled(){
         firstName.value = ""
