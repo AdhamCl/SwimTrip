@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import com.example.swimtrip.screens.HomeScreen
+import com.example.swimtrip.ui.theme.MayaBlue
 import com.example.swimtrip.ui.theme.SwimTripTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SwimTripTheme {
-                SetStatusBarColor(Color.Blue)
+                SetStatusBarColor(MayaBlue)
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                     HomeScreen(swimViewModel)
                 }
