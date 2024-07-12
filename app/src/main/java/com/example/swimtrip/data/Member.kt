@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.example.swimtrip.Constants.DATABASE_MEMBERS_TABLE
 
 @Entity(tableName = DATABASE_MEMBERS_TABLE)
-data class Members(
+data class Member(
     @PrimaryKey(autoGenerate = true)
     val id: Int =0,
     val number: Int,
