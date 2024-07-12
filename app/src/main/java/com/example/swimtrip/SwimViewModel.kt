@@ -1,7 +1,10 @@
 package com.example.swimtrip
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.swimmers.data.Member
@@ -26,8 +29,6 @@ class SwimViewModel @Inject constructor(
     val warning: MutableState<Int> = mutableStateOf(0)
     val isPay: MutableState<Boolean> = mutableStateOf(false)
     val isChosen: MutableState<Boolean> = mutableStateOf(true)
-    val chosenAndPaidMembersCount: MutableState<Int> = mutableStateOf(0)
-    val chosenMembersCount: MutableState<Int> = mutableStateOf(0)
 
 
 
@@ -98,6 +99,9 @@ class SwimViewModel @Inject constructor(
         }
 
     }
+
+
+
 
 
 
