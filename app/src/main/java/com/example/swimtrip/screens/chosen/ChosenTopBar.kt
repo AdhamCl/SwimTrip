@@ -32,14 +32,14 @@ fun ChosenTopBar(
     ) {
         Text(
             modifier = Modifier.weight(5f),
-            text = "المختارون: ${chosenMembersCount} ",
+            text = "المختارون : ${chosenMembersCount} ",
             fontSize = 22.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold
         )
         Text(
             modifier = Modifier.weight(5f),
-            text = "الدافغون: ${chosenAndPaidMembersCount}",
+            text = "المانحون : ${chosenAndPaidMembersCount}",
             fontSize = 22.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold
