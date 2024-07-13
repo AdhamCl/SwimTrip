@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import com.example.swimtrip.SwimViewModel
 import com.example.swimtrip.screens.AllMembers.AddNewMember
 import com.example.swimtrip.screens.AllMembers.AllMembersTopBar
@@ -140,8 +141,9 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
         ) {
 
             TabRow(
-                selectedTabIndex = selectedTabIndex
-            ) {
+                selectedTabIndex = selectedTabIndex,
+                contentColor   = MayaBlue,
+                ) {
                 tabItem.forEachIndexed { index, item ->
                     Tab(
                         selected = index == selectedTabIndex,
@@ -151,6 +153,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                         text = {
                             Text(
                                 text = item.title,
+                                fontWeight = FontWeight.Bold,
                                 color = MayaBlue
                             )
                         },
