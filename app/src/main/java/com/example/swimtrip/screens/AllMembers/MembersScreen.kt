@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DismissDirection
@@ -75,25 +76,13 @@ fun MembersScreen(
         ) {
 
 
-            val dismissState = rememberDismissState()
-            val dismissDirection = dismissState.dismissDirection
-            val isDismiss = dismissState.isDismissed(DismissDirection.EndToStart)
-            if (isDismiss && dismissDirection == DismissDirection.EndToStart) {
-                swimViewModel.deleteMember(it.id)
-            }
-            val degrees: Float by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0f else -45f,
-                label = ""
-            )
 
 
 
-            SwipeToDismiss(
-                state = dismissState,
-                background = { DeleteBackground(degrees) },
-                directions = setOf(DismissDirection.EndToStart),
-                dismissContent = {
-                    MemberItem(it) {
+                    MemberItem(it,{
+                        swimViewModel.deleteMember(it.id)
+
+                    }) {
                         scope.launch {
 
                             if (!swimViewModel.checkMemberIsChosen(it.id)) {
@@ -113,8 +102,8 @@ fun MembersScreen(
 
                         }
                     }
-                }
-            )
+
+
 
         }
     }
@@ -124,6 +113,7 @@ fun MembersScreen(
 @Composable
 fun MemberItem(
     member: Member,
+    deleteMember:()->Unit,
     onAddClicked:()->Unit
     ) {
     Card(
@@ -147,31 +137,52 @@ fun MemberItem(
                 fontSize = 16.sp
             )
 
-                Text(
-                    modifier = Modifier.weight(4f),
+            Column (
+                modifier = Modifier.weight(4f),
 
-                    text = member.firstName+" "+member.lastName,
+                ){
+                Text(
+                    text = member.firstName,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = member.lastName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
 
 
+            }
+
+
 
             Text(
-                modifier = Modifier.weight(.5f),
+                modifier = Modifier.weight(1f),
                 text = member.warning.toString(),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             IconButton(
                 onClick = { onAddClicked() },
-                modifier = Modifier.weight(.5f)
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = "Add to Other",
                     tint = MayaBlue,
                     modifier = Modifier.size(32.dp)
+                )
+            }
+            IconButton(
+                onClick = { deleteMember() },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription =  "Delete Member",
+                    tint = MayaBlue,
+                    modifier = Modifier.size(28.dp)
                 )
             }
         }
