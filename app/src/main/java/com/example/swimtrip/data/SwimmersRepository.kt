@@ -60,5 +60,9 @@ class SwimmersRepository @Inject constructor(
      fun getAllArchives(): Flow<List<Archive>> {
         return swimmersDao.getAllArchives()
     }
+
+     fun getArchiveById(id: Int): Flow<Archive?> {
+        return swimmersDao.getArchiveById(id)
+    }
 }
 
