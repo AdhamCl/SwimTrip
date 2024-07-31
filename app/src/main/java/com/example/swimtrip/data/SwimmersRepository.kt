@@ -4,6 +4,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.swimtrip.data.Archive
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,17 +14,17 @@ import javax.inject.Inject
 class SwimmersRepository @Inject constructor(
     private val swimmersDao: SwimmersDao
 ) {
-    fun getAllMembers(): Flow<List<Member>>{
-        return  swimmersDao.getAllMembers()
+    fun getAllMembers(): Flow<List<Member>> {
+        return swimmersDao.getAllMembers()
     }
 
 
-    fun getAllChosenMembers(): Flow<List<Member>>{
+    fun getAllChosenMembers(): Flow<List<Member>> {
         return swimmersDao.getAllChosenMembers()
     }
 
 
-    suspend fun addNewMember(member: Member){
+    suspend fun addNewMember(member: Member) {
         swimmersDao.addNewMember(member)
     }
 
@@ -35,11 +36,11 @@ class SwimmersRepository @Inject constructor(
         return swimmersDao.isChosen(id)
     }
 
-    suspend fun updateMember(member: Member){
+    suspend fun updateMember(member: Member) {
         swimmersDao.updateMember(member)
     }
 
-    suspend fun deleteMemberById(memberId: Int){
+    suspend fun deleteMemberById(memberId: Int) {
         swimmersDao.deleteMemberById(memberId)
     }
 
@@ -50,4 +51,14 @@ class SwimmersRepository @Inject constructor(
     suspend fun getChosenAndPaidMembersCount(): Int {
         return swimmersDao.getChosenAndPaidMembersCount()
     }
+
+
+    suspend fun addArchive(archive: Archive) {
+        swimmersDao.addArchive(archive)
+    }
+
+     fun getAllArchives(): Flow<List<Archive>> {
+        return swimmersDao.getAllArchives()
+    }
 }
+
