@@ -99,6 +99,12 @@ class SwimViewModel @Inject constructor(
 
     }
 
+    fun updateAllMembers() {
+        viewModelScope.launch {
+            swimmersRepository.updateAllMembers(isPay = false, isChosen = false)
+        }
+    }
+
 
     fun addArchive() {
         viewModelScope.launch(Dispatchers.IO) {
