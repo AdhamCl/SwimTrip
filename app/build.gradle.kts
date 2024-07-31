@@ -81,6 +81,9 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
 
+    implementation ("com.google.code.gson:gson:2.8.9")
+
+
 }
 
 kapt {
