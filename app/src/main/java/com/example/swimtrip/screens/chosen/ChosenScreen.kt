@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
@@ -29,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swimmers.data.Member
 import com.example.swimtrip.screens.AllMembers.DeleteBackground
+import com.example.swimtrip.ui.theme.MayaBlue
 
 
 @ExperimentalMaterial3Api
@@ -54,35 +59,20 @@ fun ChosenScreen(
         ) {
 
 
-            val dismissState = rememberDismissState()
-            val dismissDirection = dismissState.dismissDirection
-            val isDismiss = dismissState.isDismissed(DismissDirection.EndToStart)
-            if (isDismiss && dismissDirection == DismissDirection.EndToStart) {
-                val member = Member(
-                    id = it.id,
-                    number = it.number,
-                    firstName = it.firstName,
-                    lastName = it.lastName,
-                    warning = it.warning,
-                    isChosen = false,
-                    isPay = false,
-                )
-                updateMember(member)
-                updateChosenCount(-1)
-            }
-            val degrees: Float by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0f else -45f,
-                label = ""
-            )
 
-
-
-            SwipeToDismiss(
-                state = dismissState,
-                background = { DeleteBackground(degrees) },
-                directions = setOf(DismissDirection.EndToStart),
-                dismissContent = {
-                    MemberChosenItem(it) { onCheckedChange ->
+                    MemberChosenItem(it,{
+                        val member = Member(
+                            id = it.id,
+                            number = it.number,
+                            firstName = it.firstName,
+                            lastName = it.lastName,
+                            warning = it.warning,
+                            isChosen = false,
+                            isPay = false,
+                        )
+                        updateMember(member)
+                        updateChosenCount(-1)
+                    }) { onCheckedChange ->
                         val member = Member(
                             id = it.id,
                             number = it.number,
@@ -101,10 +91,10 @@ fun ChosenScreen(
 
 
 
-                    }
+
 
                 }
-            )
+
 
         }
 
@@ -114,6 +104,8 @@ fun ChosenScreen(
 @Composable
 fun MemberChosenItem(
     member: Member,
+    deleteMember:()->Unit,
+
     onCheckedChange: (Boolean) -> Unit
 ) {
     Card(
@@ -125,7 +117,7 @@ fun MemberChosenItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 20.dp, end = 20.dp, start = 10.dp),
+                .padding(top = 10.dp, bottom = 10.dp, end = 10.dp, start = 10.dp),
             Arrangement.Center,
             Alignment.CenterVertically
         ) {
@@ -145,11 +137,27 @@ fun MemberChosenItem(
                 fontSize = 16.sp
             )
 
+ 
+
             Checkbox(
                 checked = member.isPay,
                 onCheckedChange = { onCheckedChange(it) },
                 modifier = Modifier.size(24.dp)
             )
+            
+            Spacer(modifier = Modifier.width(20.dp))
+
+            IconButton(
+                onClick = { deleteMember() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription =  "Delete Member",
+                    tint = MayaBlue,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
     }
 }
