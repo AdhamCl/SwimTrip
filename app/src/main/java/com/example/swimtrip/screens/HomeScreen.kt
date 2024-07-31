@@ -29,6 +29,7 @@ import com.example.swimtrip.screens.AllMembers.AllMembersTopBar
 import com.example.swimtrip.screens.AllMembers.MembersScreen
 import com.example.swimtrip.screens.archives.ArchivesScreen
 import com.example.swimtrip.screens.archives.ArchivesTopBar
+import com.example.swimtrip.screens.chosen.ArchiveDialog
 import com.example.swimtrip.screens.chosen.ChosenScreen
 import com.example.swimtrip.screens.chosen.ChosenTopBar
 import com.example.swimtrip.ui.theme.MayaBlue
@@ -69,6 +70,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
     }
 
     val editNameDialog = remember { mutableStateOf(false) }
+    val archiveDialog = remember { mutableStateOf(false) }
 
     when {
         editNameDialog.value -> {
@@ -88,6 +90,15 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                 checkMemberExists = { swimViewModel.checkMemberExists(it) },
             )
 
+        }
+        archiveDialog.value->{
+            ArchiveDialog(
+                onDismissRequest = {
+                    archiveDialog.value = false
+                },
+                onConfirmation = {
+                },
+            )
         }
     }
 
@@ -119,7 +130,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                         1 -> ChosenTopBar(
                             chosenAndPaidMembersCount,
                             chosenMembersCount,
-
+                            {archiveDialog.value = true}
                         )
 
                         2 -> ArchivesTopBar()
