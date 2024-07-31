@@ -32,9 +32,6 @@ fun ChosenTopBar(
 ) {
 
 
-
-
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
