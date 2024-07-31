@@ -124,6 +124,17 @@ class SwimViewModel @Inject constructor(
         }
     }
 
+    private val _selectedArchive  = MutableStateFlow<Archive?>(null)
+    var selectedArchive : StateFlow<Archive?> = _selectedArchive
+
+    fun getSelectedArchive(archiveId: Int) {
+        viewModelScope.launch {
+            swimmersRepository.getArchiveById(archiveId).collect {
+                _selectedArchive.value = it
+            }
+
+        }
+    }
 
 
 
