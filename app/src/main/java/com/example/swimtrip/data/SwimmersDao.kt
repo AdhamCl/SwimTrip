@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.swimtrip.data.Archive
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface SwimmersDao {
@@ -36,4 +37,17 @@ interface SwimmersDao {
     @Query("SELECT COUNT(*) FROM members_table WHERE isChosen = 1 AND isPay = 1")
     suspend fun getChosenAndPaidMembersCount(): Int
 
+    @Query("UPDATE members_table SET isPay = :isPay, isChosen = :isChosen")
+    suspend fun updateAllMembers(isPay: Boolean, isChosen: Boolean)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addArchive(archive: Archive)
+
+    @Query("SELECT * FROM archive_table ORDER BY id ASC")
+     fun getAllArchives(): Flow<List<Archive>>
+
+    @Query("SELECT * FROM archive_table WHERE id = :id LIMIT 1")
+     fun getArchiveById(id: Int): Flow<Archive?>
+
+    @Query("DELETE FROM archive_table WHERE id = :archiveId")
+    suspend fun deleteArchiveById(archiveId: Int)
 }
