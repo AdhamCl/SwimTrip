@@ -37,10 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swimmers.data.Member
+import com.example.swimtrip.R
 import com.example.swimtrip.SwimViewModel
 import com.example.swimtrip.ui.theme.MayaBlue
 import kotlinx.coroutines.launch
@@ -49,11 +51,12 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @Composable
 fun MembersScreen(
-    swimViewModel: SwimViewModel
+    swimViewModel: SwimViewModel,
+    openWarningDialog: () -> Unit,
+    openDeleteDialog: () -> Unit
 ) {
 
     val allMembers by swimViewModel.allMembers.collectAsState()
-
 
 
     val context = LocalContext.current
@@ -76,33 +79,40 @@ fun MembersScreen(
         ) {
 
 
+            MemberItem(it,
+                {
+                    openWarningDialog()
+                    swimViewModel.id.value = it.id
+                    swimViewModel.number.value = it.number
+                    swimViewModel.firstName.value = it.firstName
+                    swimViewModel.lastName.value = it.lastName
+                    swimViewModel.warning.value = it.warning
+                    swimViewModel.isChosen.value = it.isChosen
+                    swimViewModel.isPay.value = it.isPay
+                }, {
+                    swimViewModel.memberDeleteId.value = it.id
+                    openDeleteDialog()
 
+                }) {
+                scope.launch {
 
+                    if (!swimViewModel.checkMemberIsChosen(it.id)) {
+                        swimViewModel.isChosen.value = true
+                        val member = Member(
+                            id = it.id,
+                            number = it.number,
+                            firstName = it.firstName,
+                            lastName = it.lastName,
+                            warning = it.warning,
+                            isChosen = true,
+                            isPay = false,
+                        )
+                        swimViewModel.updateMember(member)
+                    } else
+                        Toast.makeText(context, "لقد قمت بأضفة هاذا العضو مسبقا", Toast.LENGTH_SHORT).show()
 
-                    MemberItem(it,{
-                        swimViewModel.deleteMember(it.id)
-
-                    }) {
-                        scope.launch {
-
-                            if (!swimViewModel.checkMemberIsChosen(it.id)) {
-                                swimViewModel.isChosen.value = true
-                                val member = Member(
-                                    id = it.id,
-                                    number = it.number,
-                                    firstName = it.firstName,
-                                    lastName = it.lastName,
-                                    warning = it.warning,
-                                    isChosen = true,
-                                    isPay = false,
-                                )
-                                swimViewModel.updateMember(member)
-                            } else
-                                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
-
-                        }
-                    }
-
+                }
+            }
 
 
         }
@@ -113,9 +123,10 @@ fun MembersScreen(
 @Composable
 fun MemberItem(
     member: Member,
-    deleteMember:()->Unit,
-    onAddClicked:()->Unit
-    ) {
+    openWarningClicked: () -> Unit,
+    deleteMember: () -> Unit,
+    onAddClicked: () -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(top = 5.dp, end = 5.dp, start = 5.dp)
@@ -129,6 +140,17 @@ fun MemberItem(
             Arrangement.Center,
             Alignment.CenterVertically
         ) {
+            IconButton(
+                onClick = { onAddClicked() },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "Add to Other",
+                    tint = MayaBlue,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 modifier = Modifier.weight(1f),
@@ -137,10 +159,13 @@ fun MemberItem(
                 fontSize = 16.sp
             )
 
-            Column (
+            Spacer(modifier = Modifier.width(10.dp))
+
+
+            Column(
                 modifier = Modifier.weight(4f),
 
-                ){
+                ) {
                 Text(
                     text = member.firstName,
                     fontWeight = FontWeight.Bold,
@@ -164,23 +189,25 @@ fun MemberItem(
                 fontSize = 16.sp
             )
             IconButton(
-                onClick = { onAddClicked() },
+                onClick = {openWarningClicked() },
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    Icons.Default.Add,
+                    painter = painterResource(id = R.drawable.alerte),
                     contentDescription = "Add to Other",
                     tint = MayaBlue,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             }
+
+
             IconButton(
                 onClick = { deleteMember() },
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     Icons.Default.Delete,
-                    contentDescription =  "Delete Member",
+                    contentDescription = "Delete Member",
                     tint = MayaBlue,
                     modifier = Modifier.size(28.dp)
                 )
