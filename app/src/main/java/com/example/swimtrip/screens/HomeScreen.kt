@@ -22,11 +22,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import com.example.swimmers.data.Member
 import com.example.swimtrip.SwimViewModel
 import com.example.swimtrip.screens.AllMembers.AddNewMember
 import com.example.swimtrip.screens.AllMembers.AllMembersTopBar
 import com.example.swimtrip.screens.AllMembers.MembersScreen
+import com.example.swimtrip.screens.AllMembers.WarningDialog
 import com.example.swimtrip.screens.archives.ArchivesScreen
 import com.example.swimtrip.screens.archives.ArchivesTopBar
 import com.example.swimtrip.screens.chosen.ArchiveDialog
@@ -69,38 +72,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
         pagerState.animateScrollToPage(selectedTabIndex)
     }
 
-    val editNameDialog = remember { mutableStateOf(false) }
-    val archiveDialog = remember { mutableStateOf(false) }
-
-    when {
-        editNameDialog.value -> {
-            AddNewMember(
-                onDismissRequest = {
-                    editNameDialog.value = false
-                },
-                onConfirmation = {
-                    swimViewModel.addDate()
-                },
-                firstName = swimViewModel.firstName.value,
-                firstNameChange = { swimViewModel.firstName.value = it },
-                lastName = swimViewModel.lastName.value,
-                lastNameChange = { swimViewModel.lastName.value = it },
-                number = swimViewModel.number.value,
-                numberChange = { swimViewModel.number.value = it },
-                checkMemberExists = { swimViewModel.checkMemberExists(it) },
-            )
-
-        }
-        archiveDialog.value->{
-            ArchiveDialog(
-                onDismissRequest = {
-                    archiveDialog.value = false
-                },
-                onConfirmation = {
-                },
-            )
-        }
-    }
+    val context = LocalContext.current
 
 
     val allChosenMembers by swimViewModel.allChosenMembers.collectAsState()
@@ -113,6 +85,90 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
     LaunchedEffect(key1 = true) {
         swimViewModel.getAllChosenMembers()
     }
+
+
+    val editNameDialog = remember { mutableStateOf(false) }
+    val archiveDialog = remember { mutableStateOf(false) }
+    val archiveDeleteDialog = remember { mutableStateOf(false) }
+    val isChosenMemberDeleteDialog = remember { mutableStateOf(false) }
+    val memberDeleteDialog = remember { mutableStateOf(false) }
+    val warningDialog = remember { mutableStateOf(false) }
+    when {
+        editNameDialog.value -> {
+            AddNewMember(
+                onDismissRequest = {
+                    editNameDialog.value = false
+                },
+                onConfirmation = {
+                    swimViewModel.addMember(context)
+                },
+                firstName = swimViewModel.firstName.value,
+                firstNameChange = { swimViewModel.firstName.value = it },
+                lastName = swimViewModel.lastName.value,
+                lastNameChange = { swimViewModel.lastName.value = it },
+                number = swimViewModel.number.value,
+                numberChange = { swimViewModel.number.value = it },
+                checkMemberExists = { swimViewModel.checkMemberExists(it) },
+            )
+
+        }
+
+        archiveDialog.value -> {
+            ArchiveDialog(
+                onDismissRequest = {
+                    archiveDialog.value = false
+                },
+                onConfirmation = {
+                    swimViewModel.addArchive()
+                    swimViewModel.updateAllMembers()
+                },
+                listsSize = allChosenMembers.size,
+                context = context
+
+            )
+        }
+
+        archiveDeleteDialog.value -> {
+            DeleteDialog("", { archiveDeleteDialog.value = false }) {
+
+            }
+        }
+
+        isChosenMemberDeleteDialog.value -> {
+            DeleteDialog("هل أنت متأكد تريد حذف هاذا الرشيف",
+                { isChosenMemberDeleteDialog.value = false }) {
+                swimViewModel.deleteArchive()
+            }
+        }
+
+        memberDeleteDialog.value -> {
+            DeleteDialog("هل أنت متأكد تريد حذف هاذا العضو", { memberDeleteDialog.value = false }) {
+                swimViewModel.deleteMember()
+            }
+        }
+        warningDialog.value -> {
+            WarningDialog(swimViewModel.warning.value){
+                warningDialog.value = false
+                swimViewModel.warning.value = it
+                val member = Member(
+                    id = swimViewModel.id.value,
+                    number = swimViewModel.number.value,
+                    firstName = swimViewModel.firstName.value,
+                    lastName = swimViewModel.lastName.value,
+                    warning = swimViewModel.warning.value,
+                    isChosen = swimViewModel.isChosen.value,
+                    isPay = swimViewModel.isPay.value,
+                )
+                swimViewModel.updateMember(member)
+                swimViewModel.getAllMembers()
+            }
+
+
+        }
+
+    }
+
+
 
     chosenMembersCount = allChosenMembers.size
     chosenAndPaidMembersCount = allChosenMembers.count { it.isPay }
@@ -130,7 +186,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                         1 -> ChosenTopBar(
                             chosenAndPaidMembersCount,
                             chosenMembersCount,
-                            {archiveDialog.value = true}
+                            { archiveDialog.value = true }
                         )
 
                         2 -> ArchivesTopBar()
@@ -153,8 +209,8 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                contentColor   = MayaBlue,
-                ) {
+                contentColor = MayaBlue,
+            ) {
                 tabItem.forEachIndexed { index, item ->
                     Tab(
                         selected = index == selectedTabIndex,
@@ -181,14 +237,19 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                     .weight(1f),
             ) {
                 when (selectedTabIndex) {
-                    0 -> MembersScreen(swimViewModel)
-                    1 -> ChosenScreen(
-                        allChosenMembers,
-                        {swimViewModel.updateMember(it)},
-                        {   }
-                     ) {  }
+                    0 -> MembersScreen(swimViewModel,{
+                        warningDialog.value = true
+                    }) {
+                        memberDeleteDialog.value = true
+                    }
 
-                    2 -> ArchivesScreen(swimViewModel)
+                    1 -> ChosenScreen(
+                        allChosenMembers)
+                        { swimViewModel.updateMember(it) }
+
+
+
+                    2 -> ArchivesScreen(swimViewModel, { isChosenMemberDeleteDialog.value = true })
                 }
 
 
