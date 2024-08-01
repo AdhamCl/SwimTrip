@@ -1,5 +1,6 @@
 package com.example.swimtrip.screens.AllMembers
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -128,11 +129,21 @@ fun AddNewMember(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        scope.launch {
-                            if(checkMemberExists(number)) Toast.makeText(context,"هاذا الرقم موجود بالفعل",Toast.LENGTH_SHORT).show()
-                            else  {onConfirmation(); onDismissRequest()}
+                        if(firstName.isEmpty()) Toast.makeText(context,"الاسم فارغ",Toast.LENGTH_SHORT).show()
+                        else if(lastName.isEmpty()) Toast.makeText(context,"اللقب فارغ",Toast.LENGTH_SHORT).show()
+                        else if(number==0)Toast.makeText(context,"الرقم فارغ",Toast.LENGTH_SHORT).show()
+                        else {
+                            scope.launch {
+                                if (checkMemberExists(number)) Toast.makeText(
+                                    context,
+                                    "هاذا الرقم موجود بالفعل",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                else {
+                                    onConfirmation(); onDismissRequest()
+                                }
+                            }
                         }
-
                     }
                 ) {
                     Text("تأكيد")
@@ -148,4 +159,9 @@ fun AddNewMember(
                 }
             }
         )}
+}
+
+@Composable
+fun ShowToast(context: Context,text:String) {
+    Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
 }
