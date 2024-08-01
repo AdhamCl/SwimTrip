@@ -51,7 +51,9 @@ class SwimmersRepository @Inject constructor(
     suspend fun getChosenAndPaidMembersCount(): Int {
         return swimmersDao.getChosenAndPaidMembersCount()
     }
-
+    suspend fun updateAllMembers(isPay: Boolean, isChosen: Boolean) {
+        swimmersDao.updateAllMembers(isPay, isChosen)
+    }
 
     suspend fun addArchive(archive: Archive) {
         swimmersDao.addArchive(archive)
@@ -63,6 +65,9 @@ class SwimmersRepository @Inject constructor(
 
      fun getArchiveById(id: Int): Flow<Archive?> {
         return swimmersDao.getArchiveById(id)
+    }
+    suspend fun deleteArchiveById(archiveId: Int){
+        swimmersDao.deleteArchiveById(archiveId)
     }
 }
 
