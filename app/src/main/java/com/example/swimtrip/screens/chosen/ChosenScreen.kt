@@ -41,8 +41,6 @@ import com.example.swimtrip.ui.theme.MayaBlue
 fun ChosenScreen(
     allChosenMembers: List<Member>,
     updateMember: (Member) -> Unit,
-    updateChosenCount: (Int) -> Unit,
-    updateChosenAndPayCount: (Int) -> Unit
 ) {
 
 
@@ -71,7 +69,6 @@ fun ChosenScreen(
                             isPay = false,
                         )
                         updateMember(member)
-                        updateChosenCount(-1)
                     }) { onCheckedChange ->
                         val member = Member(
                             id = it.id,
@@ -83,9 +80,7 @@ fun ChosenScreen(
                             isPay = onCheckedChange,
                         )
                         updateMember(member)
-                        if(onCheckedChange)
-                            updateChosenAndPayCount(1)
-                        else updateChosenAndPayCount(-1)
+
 
 
 
