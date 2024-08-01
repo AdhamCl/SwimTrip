@@ -1,7 +1,10 @@
 package com.example.swimtrip
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.swimmers.data.Member
@@ -21,13 +24,16 @@ class SwimViewModel @Inject constructor(
     private val swimmersRepository: SwimmersRepository
 ) : ViewModel() {
 
-
+    val id: MutableState<Int> = mutableStateOf(0)
     val firstName: MutableState<String> = mutableStateOf("")
     val lastName: MutableState<String> = mutableStateOf("")
     val number: MutableState<Int> = mutableStateOf(0)
     val warning: MutableState<Int> = mutableStateOf(0)
     val isPay: MutableState<Boolean> = mutableStateOf(false)
     val isChosen: MutableState<Boolean> = mutableStateOf(true)
+
+    val memberDeleteId: MutableState<Int> = mutableStateOf(0)
+    val archiveDeleteId: MutableState<Int> = mutableStateOf(0)
 
 
 
@@ -54,24 +60,25 @@ class SwimViewModel @Inject constructor(
 
         }
     }
+    fun addMember(context: Context) {
 
-    fun addMember() {
-        viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
 
-            val member = Member(
-                number = number.value,
-                firstName = firstName.value,
-                lastName = lastName.value,
-                warning = 0,
-                isChosen = false,
-                isPay = false
-            )
-
-
-            swimmersRepository.addNewMember(member)
+                val member = Member(
+                    number = number.value,
+                    firstName = firstName.value,
+                    lastName = lastName.value,
+                    warning = 0,
+                    isChosen = false,
+                    isPay = false
+                )
 
 
-        }
+                swimmersRepository.addNewMember(member)
+
+
+            }
+
     }
 
 
@@ -84,9 +91,9 @@ class SwimViewModel @Inject constructor(
     }
 
 
-    fun deleteMember(id: Int) {
+    fun deleteMember() {
         viewModelScope.launch(Dispatchers.IO) {
-            swimmersRepository.deleteMemberById(id)
+            swimmersRepository.deleteMemberById(memberDeleteId.value)
         }
     }
 
@@ -139,6 +146,12 @@ class SwimViewModel @Inject constructor(
                 _selectedArchive.value = it
             }
 
+        }
+    }
+
+    fun deleteArchive() {
+        viewModelScope.launch(Dispatchers.IO) {
+            swimmersRepository.deleteArchiveById(archiveDeleteId.value)
         }
     }
 
