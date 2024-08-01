@@ -26,6 +26,19 @@ fun ArchivesTopBar() {
     ) {
 
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                modifier = Modifier.weight(5f),
+                text = "أرشيف الرحلات",
+                fontSize = 22.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
     }
 }
