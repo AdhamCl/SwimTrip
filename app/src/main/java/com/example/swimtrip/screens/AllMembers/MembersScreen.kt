@@ -32,6 +32,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,14 +58,19 @@ fun MembersScreen(
     openDeleteDialog: () -> Unit
 ) {
 
-    val allMembers by swimViewModel.allMembers.collectAsState()
+    val allPrimaryMembers by swimViewModel.allPrimaryMembers.collectAsState()
+    val allIntermediateMembers by swimViewModel.allIntermediateMembers.collectAsState()
+
+    val level by swimViewModel.level.collectAsState()
+
 
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
-        swimViewModel.getAllMembers()
+        swimViewModel.getMembersByPrimaryLevel()
+        swimViewModel.getMembersByIntermediateLevel()
     }
 
     LazyColumn(
@@ -74,7 +81,7 @@ fun MembersScreen(
 
         ) {
         items(
-            items = allMembers,
+            items = if(level=="متوسط")allIntermediateMembers else allPrimaryMembers,
             key = { it.id }
         ) {
 
@@ -106,6 +113,7 @@ fun MembersScreen(
                             warning = it.warning,
                             isChosen = true,
                             isPay = false,
+                            level = it.level
                         )
                         swimViewModel.updateMember(member)
                     } else
