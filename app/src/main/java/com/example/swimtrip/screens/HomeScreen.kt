@@ -77,6 +77,8 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
     val allChosenMembers by swimViewModel.allChosenMembers.collectAsState()
 
+    val level by swimViewModel.level.collectAsState()
+
 
     var chosenAndPaidMembersCount by remember { mutableIntStateOf(0) }
     var chosenMembersCount by remember { mutableIntStateOf(0) }
@@ -108,7 +110,9 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                 lastNameChange = { swimViewModel.lastName.value = it },
                 number = swimViewModel.number.value,
                 numberChange = { swimViewModel.number.value = it },
-                checkMemberExists = { swimViewModel.checkMemberExists(it) },
+                checkMemberExists = { swimViewModel.checkMemberExists() },
+                level = level,
+                levelChange = {swimViewModel.setLevel(it) }
             )
 
         }
@@ -158,6 +162,7 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
                     warning = swimViewModel.warning.value,
                     isChosen = swimViewModel.isChosen.value,
                     isPay = swimViewModel.isPay.value,
+                    level = swimViewModel.level.value
                 )
                 swimViewModel.updateMember(member)
                 swimViewModel.getAllMembers()
@@ -178,7 +183,11 @@ fun HomeScreen(swimViewModel: SwimViewModel) {
 
                 title = {
                     when (selectedTabIndex) {
-                        0 -> AllMembersTopBar {
+                        0 -> AllMembersTopBar (
+                            level
+                            ,{
+                            swimViewModel.setLevel(it)
+                        }){
                             editNameDialog.value = true
                             swimViewModel.restFiled()
                         }
