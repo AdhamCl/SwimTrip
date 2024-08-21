@@ -35,7 +35,11 @@ class SwimViewModel @Inject constructor(
     val memberDeleteId: MutableState<Int> = mutableStateOf(0)
     val archiveDeleteId: MutableState<Int> = mutableStateOf(0)
 
-
+    private val _level = MutableStateFlow<String>("متوسط")
+    var level: StateFlow<String> = _level
+    fun setLevel(newLevel: String) {
+        _level.value = newLevel
+    }
 
     private val _allMembers = MutableStateFlow<List<Member>>(emptyList())
     var allMembers: StateFlow<List<Member>> = _allMembers
@@ -44,6 +48,30 @@ class SwimViewModel @Inject constructor(
         viewModelScope.launch {
             swimmersRepository.getAllMembers().collect {
                 _allMembers.value = it
+            }
+
+        }
+    }
+
+    private val _allIntermediateMembers = MutableStateFlow<List<Member>>(emptyList())
+    var allIntermediateMembers: StateFlow<List<Member>> = _allIntermediateMembers
+
+    fun getMembersByIntermediateLevel() {
+        viewModelScope.launch {
+            swimmersRepository.getMembersByIntermediateLevel().collect {
+                _allIntermediateMembers.value = it
+            }
+
+        }
+    }
+
+    private val _allPrimaryMembers = MutableStateFlow<List<Member>>(emptyList())
+    var allPrimaryMembers: StateFlow<List<Member>> = _allPrimaryMembers
+
+    fun getMembersByPrimaryLevel() {
+        viewModelScope.launch {
+            swimmersRepository.getMembersByPrimaryLevel().collect {
+                _allPrimaryMembers.value = it
             }
 
         }
@@ -70,7 +98,8 @@ class SwimViewModel @Inject constructor(
                     lastName = lastName.value,
                     warning = 0,
                     isChosen = false,
-                    isPay = false
+                    isPay = false,
+                    level = level.value
                 )
 
 
@@ -82,8 +111,9 @@ class SwimViewModel @Inject constructor(
     }
 
 
-    suspend fun checkMemberExists(number: Int): Boolean {
-        return swimmersRepository.isMemberExists(number)
+    suspend fun checkMemberExists(): Boolean {
+
+        return swimmersRepository.isMemberExists(number.value,_level.value)
     }
 
     suspend fun checkMemberIsChosen(id: Int): Boolean {
