@@ -13,5 +13,6 @@ data class Member(
     val lastName: String,
     val warning: Int,
     val isChosen: Boolean,
-    val isPay: Boolean
+    val isPay: Boolean,
+    val level:String
 )
