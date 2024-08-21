@@ -67,6 +67,7 @@ fun ChosenScreen(
                             warning = it.warning,
                             isChosen = false,
                             isPay = false,
+                            level = it.level
                         )
                         updateMember(member)
                     }) { onCheckedChange ->
@@ -78,6 +79,7 @@ fun ChosenScreen(
                             warning = it.warning,
                             isChosen = it.isChosen,
                             isPay = onCheckedChange,
+                            level = it.level
                         )
                         updateMember(member)
 
