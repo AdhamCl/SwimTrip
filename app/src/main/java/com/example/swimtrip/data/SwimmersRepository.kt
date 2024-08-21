@@ -18,6 +18,13 @@ class SwimmersRepository @Inject constructor(
         return swimmersDao.getAllMembers()
     }
 
+    fun getMembersByIntermediateLevel(): Flow<List<Member>> {
+        return swimmersDao.getMembersByIntermediateLevel()
+    }
+
+    fun getMembersByPrimaryLevel(): Flow<List<Member>> {
+        return swimmersDao.getMembersByPrimaryLevel()
+    }
 
     fun getAllChosenMembers(): Flow<List<Member>> {
         return swimmersDao.getAllChosenMembers()
@@ -28,8 +35,8 @@ class SwimmersRepository @Inject constructor(
         swimmersDao.addNewMember(member)
     }
 
-    suspend fun isMemberExists(id: Int): Boolean {
-        return swimmersDao.isMemberExists(id)
+    suspend fun isMemberExists(id: Int,level:String): Boolean {
+        return swimmersDao.isMemberExists(id,level)
     }
 
     suspend fun isMemberChosen(id: Int): Boolean {
@@ -51,6 +58,7 @@ class SwimmersRepository @Inject constructor(
     suspend fun getChosenAndPaidMembersCount(): Int {
         return swimmersDao.getChosenAndPaidMembersCount()
     }
+
     suspend fun updateAllMembers(isPay: Boolean, isChosen: Boolean) {
         swimmersDao.updateAllMembers(isPay, isChosen)
     }
@@ -59,14 +67,15 @@ class SwimmersRepository @Inject constructor(
         swimmersDao.addArchive(archive)
     }
 
-     fun getAllArchives(): Flow<List<Archive>> {
+    fun getAllArchives(): Flow<List<Archive>> {
         return swimmersDao.getAllArchives()
     }
 
-     fun getArchiveById(id: Int): Flow<Archive?> {
+    fun getArchiveById(id: Int): Flow<Archive?> {
         return swimmersDao.getArchiveById(id)
     }
-    suspend fun deleteArchiveById(archiveId: Int){
+
+    suspend fun deleteArchiveById(archiveId: Int) {
         swimmersDao.deleteArchiveById(archiveId)
     }
 }
